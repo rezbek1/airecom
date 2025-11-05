@@ -344,43 +344,24 @@ export default function AIMentionMVP() {
 
   const analyzeWebsite = async () => {
     setLoading(true);
-    
-    // Simulate AI analysis using OpenAI API
+
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/api/scan", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 2000,
-          messages: [{
-            role: "user",
-            content: `Analyze this website URL for AI visibility: ${url}
-
-Return a JSON response with:
-{
-  "score": <number 0-100>,
-  "issues": [<list of 3-5 specific issues>],
-  "recommendations": [<list of 3-5 actionable recommendations>],
-  "hasSchema": <boolean>,
-  "hasMeta": <boolean>,
-  "loadSpeed": <"fast" | "medium" | "slow">
-}
-
-ONLY return valid JSON, no other text.`
-          }]
-        })
+        body: JSON.stringify({ url })
       });
 
-      const data = await response.json();
-      let resultText = data.content[0].text;
-      resultText = resultText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      
-      const result = JSON.parse(resultText);
+      if (!response.ok) {
+        throw new Error('Scan failed');
+      }
+
+      const result = await response.json();
       setScanResult(result);
     } catch (error) {
+      console.error('Scan error:', error);
       // Fallback demo data
       setScanResult({
         score: 68,
@@ -396,170 +377,122 @@ ONLY return valid JSON, no other text.`
         ],
         hasSchema: false,
         hasMeta: false,
-        loadSpeed: 'slow'
+        loadSpeed: 'slow',
+        platforms: {
+          chatgpt: { visible: false, score: 30 },
+          perplexity: { visible: false, score: 25 },
+          googleAI: { visible: false, score: 35 },
+          claude: { visible: false, score: 20 }
+        }
       });
     }
-    
+
     setLoading(false);
   };
 
   const generateOptimizedCode = async () => {
     setLoading(true);
-    
+
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/api/optimize", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 3000,
-          messages: [{
-            role: "user",
-            content: `Generate optimized HTML code for AI visibility for this business:
-
-Business Name: ${businessData.name}
-Business Type: ${businessData.type}
-Description: ${businessData.description}
-Keywords: ${businessData.keywords}
-
-Generate complete HTML with:
-1. Meta tags optimized for AI crawlers
-2. JSON-LD Schema.org markup for ${businessData.type}
-3. FAQ schema
-4. Semantic HTML structure
-
-Return only the HTML code, no explanations.`
-          }]
+          businessName: businessData.name,
+          businessType: businessData.type,
+          description: businessData.description,
+          keywords: businessData.keywords,
+          language: lang
         })
       });
 
+      if (!response.ok) {
+        throw new Error('Optimization failed');
+      }
+
       const data = await response.json();
-      let code = data.content[0].text;
-      code = code.replace(/```html\n?/g, "").replace(/```\n?/g, "").trim();
-      setOptimizedCode(code);
+      setOptimizedCode(data.code);
     } catch (error) {
-      setOptimizedCode(`<!DOCTYPE html>
-<html lang="${lang === 'he' ? 'he' : 'en'}">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${businessData.name} - ${businessData.type}</title>
-  
-  <!-- AI-Optimized Meta Tags -->
-  <meta name="description" content="${businessData.description}">
-  <meta name="keywords" content="${businessData.keywords}">
-  <meta name="robots" content="index, follow">
-  
-  <!-- Schema.org Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "${businessData.name}",
-    "description": "${businessData.description}",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "IL"
+      console.error('Optimize error:', error);
+      alert('Failed to generate optimized code. Please try again.');
     }
-  }
-  </script>
-</head>
-<body>
-  <h1>${businessData.name}</h1>
-  <p>${businessData.description}</p>
-</body>
-</html>`);
-    }
-    
+
     setLoading(false);
   };
 
   const createGPT = async () => {
     setLoading(true);
-    
+
     try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("/api/gpt", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 2000,
-          messages: [{
-            role: "user",
-            content: `Create a GPT bot configuration for this business:
-
-Business: ${businessData.name}
-Type: ${businessData.type}
-Description: ${businessData.description}
-
-Generate:
-1. GPT Name (creative and professional)
-2. GPT Description (engaging, 2-3 sentences)
-3. GPT Instructions (detailed prompt for the bot's behavior)
-4. Conversation Starters (4 example questions)
-
-Return as JSON:
-{
-  "name": "...",
-  "description": "...",
-  "instructions": "...",
-  "starters": ["...", "...", "...", "..."]
-}
-
-ONLY return valid JSON.`
-          }]
+          businessName: businessData.name,
+          businessType: businessData.type,
+          description: businessData.description,
+          keywords: businessData.keywords,
+          language: lang
         })
       });
 
+      if (!response.ok) {
+        throw new Error('GPT creation failed');
+      }
+
       const data = await response.json();
-      let resultText = data.content[0].text;
-      resultText = resultText.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
-      
-      const gptConfig = JSON.parse(resultText);
-      setGptData(gptConfig);
-    } catch (error) {
       setGptData({
-        name: `${businessData.name} Assistant`,
-        description: `Expert assistant for ${businessData.name}. Get instant answers about our services, pricing, and availability.`,
-        instructions: `You are a helpful assistant for ${businessData.name}, a ${businessData.type} business. Provide accurate information about services and help customers.`,
-        starters: [
-          "What services do you offer?",
-          "How can I contact you?",
-          "What are your hours?",
-          "Tell me about pricing"
-        ]
+        name: data.config.name,
+        description: data.config.description,
+        instructions: data.config.instructions,
+        starters: data.config.conversationStarters
       });
+    } catch (error) {
+      console.error('GPT creation error:', error);
+      alert('Failed to generate GPT configuration. Please try again.');
     }
-    
+
     setLoading(false);
   };
 
   const publishToDirectories = async () => {
     setLoading(true);
-    const platforms = [
-      { name: 'ProductHunt', url: 'https://www.producthunt.com/posts/ai-mention' },
-      { name: 'AI Tools Directory', url: 'https://aitoolsdirectory.com/ai-mention' },
-      { name: 'Crunchbase', url: `https://www.crunchbase.com/organization/${businessData.name.toLowerCase().replace(/\s+/g, '-')}` },
-      { name: 'LinkedIn', url: `https://www.linkedin.com/company/${businessData.name.toLowerCase().replace(/\s+/g, '-')}` },
-      { name: 'Medium', url: `https://medium.com/@aimention/${businessData.name.toLowerCase().replace(/\s+/g, '-')}` }
-    ];
-    
     setPublishStatus([]);
-    
-    for (let platform of platforms) {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      setPublishStatus(prev => [...prev, {
-        platform: platform.name,
-        status: 'success',
-        message: t.publishSuccess,
-        url: platform.url
-      }]);
+
+    try {
+      const response = await fetch("/api/publish", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          businessName: businessData.name,
+          businessType: businessData.type,
+          description: businessData.description,
+          keywords: businessData.keywords
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Publishing failed');
+      }
+
+      const data = await response.json();
+
+      // Simulate progressive publishing with delays
+      for (let result of data.results) {
+        await new Promise(resolve => setTimeout(resolve, 800));
+        setPublishStatus(prev => [...prev, result]);
+      }
+    } catch (error) {
+      console.error('Publish error:', error);
+      alert('Failed to publish to directories. Please try again.');
     }
-    
+
     setLoading(false);
   };
 
