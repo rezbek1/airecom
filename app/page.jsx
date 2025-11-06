@@ -494,16 +494,16 @@ export default function AIMentionMVP() {
       {/* Header */}
       <header className="glass-card sticky top-0 z-50 border-b border-white/10 relative">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 neon-glow-hover rounded-lg flex items-center justify-center flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 scanline-effect">
-                <Sparkles className="w-5 h-5 text-white relative z-10" />
+          <div className="flex items-center justify-between gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 neon-glow-hover rounded-lg flex items-center justify-center flex-shrink-0 relative overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 scanline-effect">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-white relative z-10" />
               </div>
-              <div className="min-w-0">
-                <h1 className="text-xl sm:text-2xl font-bold gradient-text truncate">
-                  {t.title}
+              <div className="min-w-0 flex-1">
+                <h1 className="text-sm sm:text-xl md:text-2xl font-bold gradient-text truncate">
+                  AI Recom
                 </h1>
-                <p className="text-xs text-slate-400 hidden sm:block">{t.subtitle}</p>
+                <p className="text-[10px] sm:text-xs text-slate-400 hidden sm:block truncate">{t.subtitle}</p>
               </div>
             </div>
 
@@ -575,26 +575,26 @@ export default function AIMentionMVP() {
 
         {/* Main Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-6 sm:mb-8 glass-card h-auto border border-white/10 p-1">
-            <TabsTrigger value="scanner" className="flex flex-col items-center gap-1 py-3 px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 transition-all duration-300 rounded-md">
-              <Search className="w-5 h-5" />
-              <span className="text-[10px]">{t.scanner}</span>
+          <TabsList className="grid w-full grid-cols-5 mb-6 sm:mb-8 glass-card h-auto border border-white/10 p-1 gap-0.5">
+            <TabsTrigger value="scanner" className="flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 px-1 sm:px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-purple-600 transition-all duration-300 rounded-md">
+              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-[8px] sm:text-[10px] leading-tight text-center">{t.scanner}</span>
             </TabsTrigger>
-            <TabsTrigger value="optimizer" className="flex flex-col items-center gap-1 py-3 px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 transition-all duration-300 rounded-md">
-              <Zap className="w-5 h-5" />
-              <span className="text-[10px]">{t.optimizer}</span>
+            <TabsTrigger value="optimizer" className="flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 px-1 sm:px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 transition-all duration-300 rounded-md">
+              <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-[8px] sm:text-[10px] leading-tight text-center">{t.optimizer}</span>
             </TabsTrigger>
-            <TabsTrigger value="publisher" className="flex flex-col items-center gap-1 py-3 px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-cyan-600 transition-all duration-300 rounded-md">
-              <Upload className="w-5 h-5" />
-              <span className="text-[10px]">{t.publisher}</span>
+            <TabsTrigger value="publisher" className="flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 px-1 sm:px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-cyan-600 transition-all duration-300 rounded-md">
+              <Upload className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-[8px] sm:text-[10px] leading-tight text-center">{t.publisher}</span>
             </TabsTrigger>
-            <TabsTrigger value="gpt" className="flex flex-col items-center gap-1 py-3 px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600 transition-all duration-300 rounded-md">
-              <Bot className="w-5 h-5" />
-              <span className="text-[10px]">{t.gptBuilder}</span>
+            <TabsTrigger value="gpt" className="flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 px-1 sm:px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-600 data-[state=active]:to-purple-600 transition-all duration-300 rounded-md">
+              <Bot className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-[8px] sm:text-[10px] leading-tight text-center">{t.gptBuilder}</span>
             </TabsTrigger>
-            <TabsTrigger value="reports" className="flex flex-col items-center gap-1 py-3 px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 transition-all duration-300 rounded-md">
-              <TrendingUp className="w-5 h-5" />
-              <span className="text-[10px]">{t.reports}</span>
+            <TabsTrigger value="reports" className="flex flex-col items-center gap-0.5 sm:gap-1 py-2 sm:py-3 px-1 sm:px-2 text-xs data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 transition-all duration-300 rounded-md">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-[8px] sm:text-[10px] leading-tight text-center">{t.reports}</span>
             </TabsTrigger>
           </TabsList>
 
