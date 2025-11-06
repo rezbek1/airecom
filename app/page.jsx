@@ -582,19 +582,19 @@ export default function AIMentionMVP() {
           </h2>
           <div className="flex flex-wrap justify-center gap-3 mt-6 px-2">
             <Badge className="text-sm sm:text-base glass-card neon-glow-hover border-blue-500/30 py-2 px-3">
-              <Activity className="w-4 h-4 mr-2" />
+              <Activity className="w-4 h-4 me-2" />
               ChatGPT
             </Badge>
             <Badge className="text-sm sm:text-base glass-card neon-glow-hover border-purple-500/30 py-2 px-3">
-              <Activity className="w-4 h-4 mr-2" />
+              <Activity className="w-4 h-4 me-2" />
               Perplexity
             </Badge>
             <Badge className="text-sm sm:text-base glass-card neon-glow-hover border-cyan-500/30 py-2 px-3">
-              <Activity className="w-4 h-4 mr-2" />
+              <Activity className="w-4 h-4 me-2" />
               Google AI
             </Badge>
             <Badge className="text-sm sm:text-base glass-card neon-glow-hover border-pink-500/30 py-2 px-3">
-              <Activity className="w-4 h-4 mr-2" />
+              <Activity className="w-4 h-4 me-2" />
               Claude
             </Badge>
           </div>
@@ -770,7 +770,7 @@ export default function AIMentionMVP() {
                   <Zap className="w-5 h-5" />
                   {t.optimizer}
                   {!isPremium('optimizer') && (
-                    <Badge variant="secondary" className="ml-2 neon-glow">{t.premiumFeature}</Badge>
+                    <Badge variant="secondary" className="ms-2 neon-glow">{t.premiumFeature}</Badge>
                   )}
                 </CardTitle>
                 <CardDescription className="text-slate-400">
@@ -855,11 +855,11 @@ export default function AIMentionMVP() {
                   <div className="space-y-3 animate-in fade-in slide-in-from-bottom-4">
                     <div className="flex gap-2">
                       <Button onClick={downloadCode} variant="outline" className="flex-1 glass-card border-white/10 neon-glow-hover">
-                        <Download className="w-4 h-4 mr-2" />
+                        <Download className="w-4 h-4 me-2" />
                         {t.download}
                       </Button>
                       <Button onClick={() => copyToClipboard(optimizedCode)} variant="outline" className="flex-1 glass-card border-white/10 neon-glow-hover">
-                        <Copy className="w-4 h-4 mr-2" />
+                        <Copy className="w-4 h-4 me-2" />
                         {t.copy}
                       </Button>
                     </div>
@@ -883,7 +883,7 @@ export default function AIMentionMVP() {
                   <Upload className="w-5 h-5" />
                   {t.publisher}
                   {!isPremium('publisher') && (
-                    <Badge variant="secondary" className="ml-2 neon-glow">{t.premiumFeature}</Badge>
+                    <Badge variant="secondary" className="ms-2 neon-glow">{t.premiumFeature}</Badge>
                   )}
                 </CardTitle>
                 <CardDescription className="text-slate-400">
@@ -938,7 +938,7 @@ export default function AIMentionMVP() {
                               onClick={() => window.open(status.url, '_blank')}
                               className="glass-card border-white/10 neon-glow-hover"
                             >
-                              <ExternalLink className="w-4 h-4 mr-2" />
+                              <ExternalLink className="w-4 h-4 me-2" />
                               {t.viewPublication}
                             </Button>
                           </div>
@@ -961,7 +961,7 @@ export default function AIMentionMVP() {
                   <Bot className="w-5 h-5" />
                   {t.gptBuilder}
                   {!isPremium('gpt') && (
-                    <Badge variant="secondary" className="ml-2 neon-glow">{t.premiumFeature}</Badge>
+                    <Badge variant="secondary" className="ms-2 neon-glow">{t.premiumFeature}</Badge>
                   )}
                 </CardTitle>
                 <CardDescription className="text-slate-400">
@@ -1019,7 +1019,7 @@ export default function AIMentionMVP() {
                         )}
 
                         <Button variant="outline" className="w-full mt-4 glass-card border-white/10 neon-glow-hover">
-                          <ExternalLink className="w-4 h-4 mr-2" />
+                          <ExternalLink className="w-4 h-4 me-2" />
                           {t.openBuilder}
                         </Button>
                       </CardContent>
@@ -1040,7 +1040,7 @@ export default function AIMentionMVP() {
                   <TrendingUp className="w-5 h-5" />
                   {t.reports}
                   {subscription === 'free' && (
-                    <Badge variant="outline" className="ml-2 neon-glow">Limited</Badge>
+                    <Badge variant="outline" className="ms-2 neon-glow">Limited</Badge>
                   )}
                 </CardTitle>
                 <CardDescription className="text-slate-400">
@@ -1084,7 +1084,7 @@ export default function AIMentionMVP() {
                     {subscription === 'free' && (
                       <Button
                         variant="link"
-                        className="ml-2 p-0 h-auto text-blue-400 hover:text-blue-300"
+                        className="ms-2 p-0 h-auto text-blue-400 hover:text-blue-300"
                         onClick={handleUpgrade}
                       >
                         {t.upgradeToPro} →
@@ -1094,9 +1094,9 @@ export default function AIMentionMVP() {
                 </Alert>
 
                 <Button variant="outline" className="w-full glass-card border-white/10 neon-glow-hover" disabled={subscription === 'free'}>
-                  <Download className="w-4 h-4 mr-2" />
+                  <Download className="w-4 h-4 me-2" />
                   {t.downloadReport}
-                  {subscription === 'free' && <span className="ml-2">🔒</span>}
+                  {subscription === 'free' && <span className="ms-2">🔒</span>}
                 </Button>
               </CardContent>
             </Card>

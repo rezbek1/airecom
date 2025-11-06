@@ -247,36 +247,68 @@
     font-family: var(--font-heebo), var(--font-inter), system-ui, -apple-system, sans-serif;
   }
 
-  [dir="rtl"] .flex-row-reverse {
-    flex-direction: row-reverse;
-  }
-
   [dir="rtl"] input,
   [dir="rtl"] textarea,
   [dir="rtl"] select {
     text-align: right;
   }
 
-  [dir="rtl"] .rtl\:text-right {
+  /* Mirror flex directions for RTL */
+  [dir="rtl"] .flex {
+    flex-direction: row-reverse;
+  }
+
+  [dir="rtl"] .flex-col {
+    flex-direction: column;
+  }
+
+  /* Fix icon margins in RTL - use margin-inline for auto-flipping */
+  [dir="rtl"] .items-center > svg:first-child {
+    margin-inline-start: 0;
+    margin-inline-end: 0.5rem;
+  }
+
+  [dir="rtl"] .items-start > svg:first-child {
+    margin-inline-start: 0;
+    margin-inline-end: 0.5rem;
+  }
+
+  /* Fix gaps with icons in RTL */
+  [dir="rtl"] .gap-2 {
+    gap: 0.5rem;
+    flex-direction: row-reverse;
+  }
+
+  /* Ensure proper text alignment */
+  [dir="rtl"] p,
+  [dir="rtl"] span,
+  [dir="rtl"] div {
     text-align: right;
   }
 
-  [dir="rtl"] .rtl\:text-left {
-    text-align: left;
+  [dir="rtl"] .text-center {
+    text-align: center !important;
   }
 
-  [dir="rtl"] .rtl\:mr-2 {
-    margin-right: 0.5rem;
-    margin-left: 0;
+  [dir="rtl"] .text-left {
+    text-align: right !important;
   }
 
-  [dir="rtl"] .rtl\:ml-2 {
-    margin-left: 0.5rem;
-    margin-right: 0;
+  [dir="rtl"] .text-right {
+    text-align: left !important;
   }
 
-  [dir="rtl"] .rtl\:space-x-reverse > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 1;
+  /* Fix Badge and Button icons */
+  [dir="rtl"] .badge svg,
+  [dir="rtl"] button svg {
+    margin-inline-end: 0.5rem;
+    margin-inline-start: 0;
+  }
+
+  /* Prevent flex-col from being reversed */
+  [dir="rtl"] .flex-col.items-center,
+  [dir="rtl"] .flex-col.items-start {
+    flex-direction: column;
   }
 
   /* Accessibility Utilities */
