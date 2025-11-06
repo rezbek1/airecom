@@ -638,6 +638,25 @@ export default function AIMentionMVP() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                <div className="space-y-3">
+                  <Label className="text-slate-300 text-base">{t.enterUrl}</Label>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Input
+                      placeholder="https://example.com"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                      className="flex-1 bg-white/95 border-blue-500/30 text-slate-900 placeholder:text-slate-500 h-12 text-base font-medium shadow-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    />
+                    <Button
+                      onClick={analyzeWebsite}
+                      disabled={loading || !url}
+                      className="btn-futuristic neon-glow-hover h-12 px-6 text-base whitespace-nowrap"
+                    >
+                      {loading ? t.analyzing : t.analyze}
+                    </Button>
+                  </div>
+                </div>
+
                 {/* Introduction Section */}
                 <div className="glass-card border-blue-500/20 p-4 sm:p-6 rounded-lg space-y-4">
                   <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
@@ -682,27 +701,9 @@ export default function AIMentionMVP() {
                     {t.introFooter}
                   </p>
                 </div>
-                <div className="space-y-3">
-                  <Label className="text-slate-300 text-base">{t.enterUrl}</Label>
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <Input
-                      placeholder="https://example.com"
-                      value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                      className="flex-1 bg-white/95 border-blue-500/30 text-slate-900 placeholder:text-slate-500 h-12 text-base font-medium shadow-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                    <Button
-                      onClick={analyzeWebsite}
-                      disabled={loading || !url}
-                      className="btn-futuristic neon-glow-hover h-12 px-6 text-base whitespace-nowrap"
-                    >
-                      {loading ? t.analyzing : t.analyze}
-                    </Button>
-                  </div>
 
-                  {/* Security Badge under input */}
-                  <SecurityBadge lang={lang} variant="full" />
-                </div>
+                {/* Security Badge */}
+                <SecurityBadge lang={lang} variant="full" />
 
                 {scanResult && (
                   <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4">
