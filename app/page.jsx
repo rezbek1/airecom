@@ -102,6 +102,15 @@ const translations = {
     featureWhiteLabel: "White-label",
     featurePriority: "Приоритетная поддержка",
     viewPublication: "Посмотреть публикацию",
+    introTitle: "AI Recom — это платформа, которая помогает вашему сайту стать видимым для ИИ-помощников вроде ChatGPT, Perplexity, Google AI и Claude.",
+    introDescription: "Вы узнаете, как искусственный интеллект видит ваш сайт, какие рекомендации он может давать по вашему продукту — и что нужно улучшить, чтобы попасть в ответы.",
+    introOneClick: "🛠 В один клик:",
+    introStep1: "Проверяете, как ИИ воспринимает ваш сайт",
+    introStep2: "Получаете рекомендации по улучшению видимости",
+    introStep3: "Публикуете оптимизированный контент для ИИ",
+    introStep4: "Создаёте собственные GPT-помощники",
+    introSecurity: "🔒 Все данные шифруются по стандарту AES-256-GCM — конфиденциальность гарантирована.",
+    introFooter: "AI Recom — сделайте ваш сайт заметным в новой реальности ИИ.",
   },
   en: {
     title: "AI Recomendation",
@@ -183,6 +192,15 @@ const translations = {
     featureWhiteLabel: "White-label",
     featurePriority: "Priority support",
     viewPublication: "View Publication",
+    introTitle: "AI Recom is a platform that helps your website become visible to AI assistants like ChatGPT, Perplexity, Google AI, and Claude.",
+    introDescription: "You'll learn how artificial intelligence sees your site, what recommendations it can give about your product — and what needs to be improved to appear in AI answers.",
+    introOneClick: "🛠 In one click:",
+    introStep1: "Check how AI perceives your website",
+    introStep2: "Get recommendations to improve visibility",
+    introStep3: "Publish AI-optimized content",
+    introStep4: "Create your own GPT assistants",
+    introSecurity: "🔒 All data is encrypted with AES-256-GCM standard — confidentiality guaranteed.",
+    introFooter: "AI Recom — make your website visible in the new AI reality.",
   },
   he: {
     title: "AI Recomendation",
@@ -264,6 +282,15 @@ const translations = {
     featureWhiteLabel: "White-label",
     featurePriority: "תמיכה עדיפות",
     viewPublication: "צפה בפרסום",
+    introTitle: "AI Recom — זו פלטפורמה שעוזרת לאתר שלך להיות גלוי לעוזרי AI כמו ChatGPT, Perplexity, Google AI ו-Claude.",
+    introDescription: "תגלה איך בינה מלאכותית רואה את האתר שלך, איזה המלצות היא יכולה לתת על המוצר שלך — ומה צריך לשפר כדי להופיע בתשובות.",
+    introOneClick: "🛠 בקליק אחד:",
+    introStep1: "בדוק איך AI תופס את האתר שלך",
+    introStep2: "קבל המלצות לשיפור הנראות",
+    introStep3: "פרסם תוכן מותאם ל-AI",
+    introStep4: "צור עוזרי GPT משלך",
+    introSecurity: "🔒 כל הנתונים מוצפנים בתקן AES-256-GCM — סודיות מובטחת.",
+    introFooter: "AI Recom — הפוך את האתר שלך לגלוי במציאות החדשה של AI.",
   }
 };
 
@@ -611,6 +638,50 @@ export default function AIMentionMVP() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                {/* Introduction Section */}
+                <div className="glass-card border-blue-500/20 p-4 sm:p-6 rounded-lg space-y-4">
+                  <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                    {t.introTitle}
+                  </p>
+                  <p className="text-slate-400 text-sm leading-relaxed">
+                    {t.introDescription}
+                  </p>
+
+                  <div className="space-y-3 pt-2">
+                    <p className="text-blue-400 font-semibold text-sm sm:text-base">
+                      {t.introOneClick}
+                    </p>
+                    <ul className="space-y-2 text-sm text-slate-300">
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span>{t.introStep1}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span>{t.introStep2}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span>{t.introStep3}</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
+                        <span>{t.introStep4}</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="pt-2 border-t border-white/10">
+                    <p className="text-green-400 text-xs sm:text-sm flex items-start gap-2">
+                      <Shield className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                      <span>{t.introSecurity}</span>
+                    </p>
+                  </div>
+
+                  <p className="text-center text-slate-300 font-semibold text-sm sm:text-base gradient-text pt-2">
+                    {t.introFooter}
+                  </p>
+                </div>
                 <div className="space-y-3">
                   <Label className="text-slate-300 text-base">{t.enterUrl}</Label>
                   <div className="flex flex-col sm:flex-row gap-3">
