@@ -28,10 +28,15 @@ if (getApps().length === 0) {
   }
 }
 
-const db = getFirestore();
+// Get Firestore instance with database ID 'airecom'
+const db = getFirestore('airecom');
 
 // Configure Firestore to ignore undefined properties
-db.settings({ ignoreUndefinedProperties: true });
+try {
+  db.settings({ ignoreUndefinedProperties: true });
+} catch (error) {
+  console.error('Failed to configure Firestore settings:', error);
+}
 
 export interface CheckRecord {
   checkId: string;

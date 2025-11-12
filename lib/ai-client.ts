@@ -25,6 +25,16 @@ export async function checkClaude(
   language: Language = 'he'
 ): Promise<AICheckResult> {
   try {
+    // Temporarily disabled - model not available
+    console.log('[Claude] Temporarily disabled due to model availability issues');
+    return {
+      mentioned: false,
+      position: null,
+      context: null,
+      confidence: 0,
+      error: 'Claude temporarily disabled',
+    };
+
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
       return {
@@ -41,7 +51,7 @@ export async function checkClaude(
     const prompt = generateVisibilityPrompt(websiteData, language);
 
     const message = await anthropic.messages.create({
-      model: 'claude-3-sonnet-20240229',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 1024,
       temperature: 0.3, // Lower temperature for more consistent results
       system: prompt.systemPrompt,
