@@ -1791,4 +1791,443 @@ Status: ✅ Pushed to GitHub
 
 ---
 
+## 🌐 Session 7: AI Visibility Check API Architecture (November 12, 2025)
+
+### Project Pivot: From 5 Modules to 2 Core Modules
+
+**Date:** November 12, 2025
+**Status:** Planning & Architecture Phase
+**Language:** Hebrew (Primary), Russian & English (Secondary)
+
+---
+
+### 📋 Project Restructuring Summary
+
+**OLD ARCHITECTURE (5 modules):**
+```
+1. AI Scanner
+2. AI Optimizer  
+3. Publisher
+4. GPT Builder
+5. Reports
+```
+
+**NEW ARCHITECTURE (2 core modules + Freemium Model):**
+```
+✅ MODULE 1: בדיקה (Scanner - AI Visibility Check)
+   - Freemium: 1 check per session → Results: Yes/No
+   - Premium: Weekly auto-checks → Results: Position + Context
+
+✅ MODULE 2: דוחות (Reports - Dashboard)
+   - Freemium: Last check only
+   - Premium: Full history, graphs, trends
+```
+
+---
+
+### 💳 Freemium Business Model
+
+**Pricing:**
+- **Freemium:** Free tier with limited checks
+- **Premium:** 250 NIS/month (₪)
+- **Payment Flow:** User → Payment Link → Return to Site → Activate Premium
+- **Payment Links:** קישור לתשלום (Ready to insert by user)
+
+**Features Distribution:**
+
+| Feature | Freemium | Premium |
+|---------|----------|---------|
+| Checks per session | 1 | ∞ |
+| Check frequency | On-demand | Weekly auto |
+| Results: Mentioned (Yes/No) | ✅ | ✅ |
+| Results: Position | ❌ | ✅ |
+| Results: Context | ❌ | ✅ |
+| History | ❌ | ✅ |
+| Graphs/Trends | ❌ | ✅ |
+| Export to PDF/CSV | ❌ | ✅ |
+
+---
+
+### 🏗️ API Architecture: `/api/check-visibility`
+
+#### Flow Diagram:
+```
+User Input (URL)
+    ↓
+[Step 1] Parse Website
+    ├─ Fetch HTML
+    ├─ Extract: H1, meta description, keywords
+    ├─ Detect business type (Restaurant/Consulting/Services/etc)
+    ├─ Check: robots.txt + llms.txt
+    └─ Store metadata
+    ↓
+[Step 2] Build Dynamic Prompts (3 Languages)
+    ├─ HE (Default): "האם אתה ממליץ על האתר [name] [url] עבור [business]?"
+    ├─ RU: "Рекомендуешь ли ты сайт [name] [url] для [business]?"
+    └─ EN: "Do you recommend website [name] [url] for [business]?"
+    ↓
+[Step 3] Query AI Systems IN PARALLEL
+    ├─ Claude API (Anthropic) ✅ READY
+    ├─ ChatGPT API (OpenAI) ✅ READY
+    ├─ Perplexity (Future: API/Scraping)
+    ├─ Grok (Future: API/Scraping)
+    └─ Gemini (Future: API)
+    ↓
+[Step 4] Parse Responses
+    ├─ mentioned: boolean (Is website mentioned in response?)
+    ├─ position: number (Top N result position)
+    ├─ context: string (200 chars about the website)
+    ├─ confidence: number (0-100)
+    └─ language: string (Language used for query)
+    ↓
+[Step 5] Save to Firebase
+    └─ /users/{email}/checks/{checkId}
+       ├─ siteUrl: string
+       ├─ timestamp: number
+       ├─ isPremium: boolean
+       ├─ language: "he" | "ru" | "en"
+       ├─ robotsCheck: { exists, compatible }
+       ├─ llmsCheck: { exists, compatible }
+       ├─ results: {
+       │   claude: { mentioned, position, context, confidence },
+       │   chatgpt: { mentioned, position, context, confidence },
+       │   perplexity: { mentioned, position, context, confidence },
+       │   grok: { mentioned, position, context, confidence },
+       │   gemini: { mentioned, position, context, confidence }
+       │ }
+       └─ recommendations: { robots_txt_template, llms_txt_template }
+    ↓
+Return: Complete Report
+```
+
+---
+
+### 🔧 Technical Implementation Plan
+
+#### API Endpoint: `POST /api/check-visibility`
+
+**Request Body:**
+```json
+{
+  "url": "https://example.com",
+  "language": "he",
+  "email": "user@example.com",
+  "isPremium": false
+}
+```
+
+**Response Body (Success):**
+```json
+{
+  "success": true,
+  "siteUrl": "https://example.com",
+  "parsedData": {
+    "businessName": "Example Business",
+    "businessType": "consulting",
+    "description": "Professional consulting services",
+    "keywords": ["consulting", "business", "strategy"]
+  },
+  "robotsCheck": {
+    "exists": true,
+    "compatible": true,
+    "message": "robots.txt found and properly configured"
+  },
+  "llmsCheck": {
+    "exists": false,
+    "compatible": false,
+    "message": "llms.txt not found - recommendation provided"
+  },
+  "results": {
+    "claude": {
+      "mentioned": true,
+      "position": 3,
+      "context": "Example Business provides excellent consulting...",
+      "confidence": 92
+    },
+    "chatgpt": {
+      "mentioned": true,
+      "position": 2,
+      "context": "For professional consulting, Example Business offers...",
+      "confidence": 88
+    },
+    "perplexity": {
+      "mentioned": false,
+      "position": null,
+      "context": null,
+      "confidence": 0
+    },
+    "grok": {
+      "mentioned": null,
+      "position": null,
+      "context": "API not available yet",
+      "confidence": 0
+    },
+    "gemini": {
+      "mentioned": null,
+      "position": null,
+      "context": "API not available yet",
+      "confidence": 0
+    }
+  },
+  "recommendations": {
+    "priority": ["Create llms.txt", "Improve meta tags", "Add Schema.org"],
+    "robots_txt": "User-agent: *\nAllow: /\nSitemap: https://example.com/sitemap.xml",
+    "llms_txt": "# Example Business\n\n## About\nProfessional consulting services...",
+    "schema_org": { }
+  },
+  "timestamp": 1731401234,
+  "checkId": "check_abc123xyz"
+}
+```
+
+---
+
+### 📁 Required Files Structure
+
+```
+airecom/
+├── app/
+│   ├── api/
+│   │   ├── check-visibility/
+│   │   │   └── route.ts          ← Main API endpoint
+│   │   ├── firebase/
+│   │   │   ├── save-check/route.ts
+│   │   │   └── get-checks/route.ts
+│   │   └── auth/
+│   │       └── verify-premium/route.ts
+│   │
+│   └── page.jsx                  ← Main UI (Updated for Hebrew)
+│
+├── lib/
+│   ├── parser.ts                 ← Website parsing (H1, meta, keywords)
+│   ├── ai-client.ts              ← Claude + OpenAI integration
+│   ├── firebase-client.ts        ← Firebase read/write
+│   ├── prompts.ts                ← Multi-language prompt templates
+│   └── validators.ts             ← Input validation
+│
+├── components/
+│   ├── ui/
+│   ├── Scanner.tsx               ← בדיקה Tab component
+│   ├── Reports.tsx               ← דוחות Tab component
+│   ├── UpgradeModal.tsx           ← Premium upgrade modal
+│   └── LanguageSwitcher.tsx      ← HE / RU / EN toggle
+│
+├── .env.local                    ← Environment variables
+├── package.json                  ← Dependencies
+└── firebase.json                 ← Firebase config
+```
+
+---
+
+### 🔑 Environment Variables Required
+
+```bash
+# AI APIs (PROVIDED BY USER)
+OPENAI_API_KEY=sk-proj-...
+ANTHROPIC_API_KEY=sk-ant-...
+
+# Firebase (TO BE CONFIGURED)
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSy...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=airecom.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=airecom-prod
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=airecom-prod.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=123456789...
+NEXT_PUBLIC_FIREBASE_APP_ID=1:123456789...
+
+# Future APIs (when added)
+PERPLEXITY_API_KEY=pplx-...
+TAVILY_API_KEY=tvly-...
+GEMINI_API_KEY=AIzaSy...
+
+# Payment
+PAYMENT_LINK_URL=https://your-payment-provider.com/checkout/{sessionId}
+```
+
+---
+
+### 🛠️ Implementation Phases
+
+#### Phase 1: Core API (CURRENT)
+- ⏳ Website parser (`lib/parser.ts`)
+- ⏳ Claude API integration (`lib/ai-client.ts`)
+- ⏳ OpenAI API integration
+- ⏳ Firebase saving (`lib/firebase-client.ts`)
+- ⏳ Main endpoint (`/api/check-visibility`)
+
+#### Phase 2: Frontend UI
+- ⏳ Update to Hebrew-first design
+- ⏳ Scanner component (בדיקה tab)
+- ⏳ Reports component (דוחות tab)
+- ⏳ Mobile responsive (vertical menu on mobile)
+- ⏳ Language switcher
+
+#### Phase 3: Premium Features
+- ⏳ Firebase user authentication
+- ⏳ Premium flag in user profile
+- ⏳ Upgrade modal with payment link
+- ⏳ Premium content blur/lock
+- ⏳ Weekly scheduler for auto-checks
+
+#### Phase 4: Additional AI Systems
+- ⏳ Perplexity API / Scraping
+- ⏳ Grok API / Scraping
+- ⏳ Gemini API integration
+
+---
+
+### 🎯 Business Logic Rules
+
+**For Freemium Users:**
+1. One check per session
+2. Results show: mentioned (yes/no) only
+3. Display: Rating of 5 AI systems
+4. Save last result for 7 days
+5. Show "Upgrade to Premium" modal for advanced features
+
+**For Premium Users:**
+1. Unlimited checks
+2. Results show: position + context
+3. Store full history
+4. Weekly auto-checks
+5. Show graphs and trends
+
+**Data Retention:**
+- Freemium: 7 days
+- Premium: 12 months
+
+---
+
+### 📊 Success Metrics
+
+**Technical:**
+- API response time: < 30 seconds
+- Uptime: 99.5%
+- Error rate: < 1%
+
+**Product:**
+- Scanner accuracy: > 85%
+- Freemium → Premium conversion: Target 5%
+- Average checks per user: > 2/week
+
+---
+
+### ⚠️ Challenges & Solutions
+
+| Challenge | Solution |
+|-----------|----------|
+| **API Costs** | Cache results, rate limit per user |
+| **Rate Limits** | Queue system with delays |
+| **Hallucinations** | Post-process AI responses, validate mentions |
+| **Parsing Errors** | Fallback templates, error handling |
+| **Firebase Limits** | Optimize queries, archive old data |
+| **CORS Issues** | Use backend proxy for web scraping |
+
+---
+
+### 🔐 Security Considerations
+
+- [ ] API keys in `.env.local` (never commit)
+- [ ] Validate user input (URL format, length)
+- [ ] Rate limiting: 5 checks/hour for freemium
+- [ ] HTTPS only
+- [ ] Firebase security rules (user data isolation)
+- [ ] Payment link validation
+- [ ] SQL injection prevention
+- [ ] XSS protection in output
+
+---
+
+### 📚 Current Status
+
+**Architecture:**
+- Design: ✅ COMPLETE
+- API Flow: ✅ DESIGNED
+- Database Schema: ✅ PLANNED
+- Freemium Logic: ✅ DEFINED
+
+**API Implementation (READY TO START):**
+- Claude Integration: ✅ Ready
+- OpenAI Integration: ✅ Ready
+- Website Parser: ✅ Ready
+- Firebase Setup: ✅ Ready
+
+**Next Immediate Steps:**
+1. Create `lib/parser.ts` - Website parsing logic
+2. Create `lib/ai-client.ts` - Claude + OpenAI API calls
+3. Create `lib/firebase-client.ts` - Firebase integration
+4. Create `app/api/check-visibility/route.ts` - Main API endpoint
+5. Test with sample URLs
+
+---
+
+### 🚀 Dependencies to Install
+
+```bash
+npm install @anthropic-ai/sdk openai firebase
+```
+
+**Versions:**
+- @anthropic-ai/sdk: latest
+- openai: latest
+- firebase: latest (Firebase Admin SDK for backend)
+
+---
+
+### 🎓 Key Implementation Details
+
+**Website Parser (`lib/parser.ts`):**
+- Use `cheerio` or `jsdom` for HTML parsing
+- Extract H1, meta description, og:title
+- Auto-detect business type based on keywords
+- Handle robots.txt and llms.txt detection
+
+**AI Client (`lib/ai-client.ts`):**
+- Create Claude and OpenAI client instances
+- Build dynamic prompts with site data
+- Parse responses for mentions
+- Return structured data
+
+**Firebase Client (`lib/firebase-client.ts`):**
+- Initialize Firebase admin SDK
+- Save check results with user ID
+- Query historical data for Premium users
+- Handle data retention policies
+
+**Main API Route (`app/api/check-visibility/route.ts`):**
+- Validate incoming URL
+- Call parser, AI clients in parallel
+- Aggregate results
+- Save to Firebase
+- Return formatted response
+
+---
+
+### 📝 Notes for Continuation
+
+**When Starting Implementation:**
+1. Set up `.env.local` with API keys
+2. Test Claude API connection first
+3. Test OpenAI API connection
+4. Create Firebase project and configure
+5. Start with basic parser testing
+6. Add AI integration step by step
+7. Deploy to Vercel for testing
+
+**Debugging Tips:**
+- Log all API responses
+- Catch and handle errors gracefully
+- Test with multiple website types
+- Monitor API costs
+- Check rate limits
+
+---
+
+*Session 7 Status: ARCHITECTURE COMPLETE ✅*
+*Ready for implementation: YES ✅*
+*Version: 3.0 (Major Restructuring)*
+*Date: November 12, 2025*
+*Next Session: Implementation Phase*
+
+---
+
 **END OF SESSION LOG**
