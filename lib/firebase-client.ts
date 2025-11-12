@@ -60,6 +60,31 @@ export interface CheckRecord {
 }
 
 /**
+ * Удаляет все undefined значения из объекта (рекурсивно)
+ */
+function removeUndefined(obj: any): any {
+  if (obj === null || obj === undefined) {
+    return null;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(removeUndefined);
+  }
+
+  if (typeof obj === 'object') {
+    const cleaned: any = {};
+    for (const key in obj) {
+      if (obj[key] !== undefined) {
+        cleaned[key] = removeUndefined(obj[key]);
+      }
+    }
+    return cleaned;
+  }
+
+  return obj;
+}
+
+/**
  * Сохраняет результат проверки в Firebase
  */
 export async function saveCheck(checkData: Omit<CheckRecord, 'checkId' | 'timestamp'>): Promise<string> {
@@ -73,12 +98,15 @@ export async function saveCheck(checkData: Omit<CheckRecord, 'checkId' | 'timest
       ...checkData,
     };
 
+    // Удаляем все undefined значения
+    const cleanedRecord = removeUndefined(record);
+
     // Определяем коллекцию в зависимости от наличия email
     const collectionPath = checkData.email
       ? `users/${checkData.email}/checks`
       : 'anonymous_checks';
 
-    await db.collection(collectionPath).doc(checkId).set(record);
+    await db.collection(collectionPath).doc(checkId).set(cleanedRecord);
 
     console.log(`Check saved: ${checkId}`);
     return checkId;
