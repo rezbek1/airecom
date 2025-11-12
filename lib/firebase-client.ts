@@ -30,6 +30,9 @@ if (getApps().length === 0) {
 
 const db = getFirestore();
 
+// Configure Firestore to ignore undefined properties
+db.settings({ ignoreUndefinedProperties: true });
+
 export interface CheckRecord {
   checkId: string;
   siteUrl: string;

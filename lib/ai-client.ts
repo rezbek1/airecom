@@ -41,7 +41,7 @@ export async function checkClaude(
     const prompt = generateVisibilityPrompt(websiteData, language);
 
     const message = await anthropic.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-3-5-sonnet-20240620',
       max_tokens: 1024,
       temperature: 0.3, // Lower temperature for more consistent results
       system: prompt.systemPrompt,
