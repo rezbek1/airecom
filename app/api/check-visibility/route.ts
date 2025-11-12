@@ -31,8 +31,11 @@ export async function POST(request: NextRequest) {
   try {
     const body: CheckVisibilityRequest = await request.json();
 
+    console.log('[CHECK-VISIBILITY] Received request:', { url: body.url, language: body.language, email: body.email });
+
     // Validate input
     if (!body.url) {
+      console.error('[CHECK-VISIBILITY] URL is missing');
       return NextResponse.json(
         { error: 'URL is required' },
         { status: 400 }
@@ -42,9 +45,10 @@ export async function POST(request: NextRequest) {
     // Validate URL format
     try {
       new URL(body.url);
-    } catch {
+    } catch (e) {
+      console.error('[CHECK-VISIBILITY] Invalid URL format:', body.url, e);
       return NextResponse.json(
-        { error: 'Invalid URL format' },
+        { error: 'Invalid URL format. Please include http:// or https://' },
         { status: 400 }
       );
     }
